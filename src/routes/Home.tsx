@@ -1,6 +1,6 @@
 // src/routes/Home.tsx
 import { Link } from "react-router-dom";
-import { FiCpu, FiTool, FiZap } from "react-icons/fi";
+import { FiCpu, FiFolder, FiTool, FiZap } from "react-icons/fi";
 
 const utilities = [
   {
@@ -17,6 +17,13 @@ const utilities = [
     path: "/reenviar-pedidos",
     badge: "Ativo",
     icon: <FiZap size={24} />, // importe FiZap do react-icons/fi
+  },
+  {
+    title: "Extrair e Buscar XMLs em ZIPs",
+    description: "Extraia ZIPs recursivamente e filtre XMLs por nome, com resumo automático.",
+    path: "/extrator-xml",
+    badge: "Ativo",
+    icon: <FiFolder size={24} />,
   },
   {
     title: "Outra funcionalidade",
@@ -61,8 +68,8 @@ function Home() {
 
               <span
                 className={`text-xs px-3 py-1 rounded-full ${util.badge === "Ativo"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-amber-100 text-amber-700"
+                  ? "bg-green-100 text-green-700"
+                  : "bg-amber-100 text-amber-700"
                   }`}
               >
                 {util.badge}

@@ -3,6 +3,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import Home from "./routes/Home";
 import JsonConverter from "./features/xml-to-json/jsonConverter";
 import ReenvioPedidos from "./features/reenvio/ReenvioPedidos";
+import ExtratorXML from "./features/extrator-xml/ExtratorXML";
 
 function App() {
   return (
@@ -28,7 +29,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/xml-to-json" element={<JsonConverter />} />
-          <Route path="/reenviar-pedidos" element={<ReenvioPedidos/>} />
+          <Route path="/reenviar-pedidos" element={<ReenvioPedidos />} />
+          <Route path="/extrator-xml" element={<ExtratorXML />} />
         </Routes>
       </main>
 
