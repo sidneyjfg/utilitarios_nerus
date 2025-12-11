@@ -1,9 +1,9 @@
 {
-  "name": "utilitarios-nerus",
+  "name": "utilitarios_nerus",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://sidneyjfg.github.io/utilitarios-nerus/",
+  "homepage": "https://sidneyjfg.github.io/utilitarios_nerus/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
