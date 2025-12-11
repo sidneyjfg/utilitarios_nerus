@@ -1,6 +1,6 @@
 // src/routes/Home.tsx
 import { Link } from "react-router-dom";
-import { FiCpu, FiTool } from "react-icons/fi";
+import { FiCpu, FiTool, FiZap } from "react-icons/fi";
 
 const utilities = [
   {
@@ -10,6 +10,13 @@ const utilities = [
     path: "/xml-to-json",
     badge: "Ativo",
     icon: <FiCpu size={24} />,
+  },
+  {
+    title: "Reenvio de Pedidos",
+    description: "Reenvie pedidos para os hubs Anymarket, TrayCommerce ou PluggTo rapidamente.",
+    path: "/reenviar-pedidos",
+    badge: "Ativo",
+    icon: <FiZap size={24} />, // importe FiZap do react-icons/fi
   },
   {
     title: "Outra funcionalidade",
@@ -31,7 +38,7 @@ function Home() {
 
       {/* Subtítulo */}
       <p className="text-slate-600 mb-10 max-w-xl text-sm leading-relaxed">
-        Ferramentas rápidas, simples e totalmente executadas no navegador.  
+        Ferramentas rápidas, simples e totalmente executadas no navegador.
         Escolha um utilitário abaixo.
       </p>
 
@@ -41,10 +48,9 @@ function Home() {
           <div
             key={util.title}
             className={`border border-slate-200 bg-white rounded-2xl p-6 shadow-sm transition-all 
-              ${
-                util.disabled
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:shadow-md hover:-translate-y-1"
+              ${util.disabled
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:shadow-md hover:-translate-y-1"
               }`}
           >
             {/* Ícone + Badge */}
@@ -54,11 +60,10 @@ function Home() {
               </div>
 
               <span
-                className={`text-xs px-3 py-1 rounded-full ${
-                  util.badge === "Ativo"
+                className={`text-xs px-3 py-1 rounded-full ${util.badge === "Ativo"
                     ? "bg-green-100 text-green-700"
                     : "bg-amber-100 text-amber-700"
-                }`}
+                  }`}
               >
                 {util.badge}
               </span>
