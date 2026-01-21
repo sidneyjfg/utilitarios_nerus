@@ -36,6 +36,8 @@ export const regras = {
     "NFCeCEST": {
         digits: 7,
         requiredIf: (linha: any) => String(linha["NFCeCST"]) === "110",
+        requiredIfMessage: (linha: any) =>
+            `NFCeCST está "${linha["NFCeCST"]}", logo NFCeCEST deve estar preenchido obrigatoriamente`,
     },
     "NFCeCSTPIS": {
         digits: 2,

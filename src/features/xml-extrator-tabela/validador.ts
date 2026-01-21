@@ -46,10 +46,15 @@ export function validarTabela(dados: any[]) {
             // ===== requiredIf =====
             if (regra.requiredIf && regra.requiredIf(linha)) {
                 if (isBlank(valor) || Number(valor) === 0) {
+                    const msg =
+                        regra.requiredIfMessage
+                            ? regra.requiredIfMessage(linha)
+                            : "é obrigatório para este CST";
+
                     errosLinha.push({
                         coluna,
                         valor: fmtValor(valor),
-                        mensagem: "é obrigatório para este CST",
+                        mensagem: msg,
                     });
                 }
             }
