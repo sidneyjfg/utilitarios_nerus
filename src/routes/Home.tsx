@@ -1,6 +1,6 @@
 // src/routes/Home.tsx
 import { Link } from "react-router-dom";
-import { FiCpu, FiFolder, FiTool, FiZap } from "react-icons/fi";
+import { FiCpu, FiFolder, FiTable, FiTool, FiZap } from "react-icons/fi";
 
 const utilities = [
   {
@@ -24,6 +24,14 @@ const utilities = [
     path: "/extrator-xml",
     badge: "Ativo",
     icon: <FiFolder size={24} />,
+  },
+  {
+    title: "Extrair Tabela do Excel",
+    description:
+      "Leia planilhas Excel ignorando linhas 1–5 e use a 6ª como cabeçalhos.",
+    path: "/xml-tabela",
+    badge: "Ativo",
+    icon: <FiTable size={24} />,
   },
   {
     title: "Outra funcionalidade",
