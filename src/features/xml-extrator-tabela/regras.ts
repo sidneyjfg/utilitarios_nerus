@@ -48,6 +48,7 @@ export const regras = {
     },
     "NFCeCSTCOFINS": {
         digits: 2,
+        min: 2,
         required: true,
     },
     "NFCeAliqCOFINS": {

@@ -26,9 +26,9 @@ const utilities = [
     icon: <FiFolder size={24} />,
   },
   {
-    title: "Extrair Tabela do Excel",
+    title: "Validador POS",
     description:
-      "Leia planilhas Excel ignorando linhas 1–5 e use a 6ª como cabeçalhos.",
+      "Lê planilhas Excel ignorando linhas 1–5 e use a 6ª como cabeçalhos.",
     path: "/xml-tabela",
     badge: "Ativo",
     icon: <FiTable size={24} />,
