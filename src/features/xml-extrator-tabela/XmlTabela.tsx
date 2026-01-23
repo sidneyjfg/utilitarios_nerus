@@ -7,7 +7,92 @@ export default function XmlTabela() {
     const [erro, setErro] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    
+    const [dadosOriginais, setDadosOriginais] = useState<any[]>([]);
+    const [workbookOriginal, setWorkbookOriginal] = useState<XLSX.WorkBook | null>(null);
+    const [sheetNameOriginal, setSheetNameOriginal] = useState<string | null>(null);
+    const [correcoes, setCorrecoes] = useState<any[]>([]);
+    const [mostrarDetalhes, setMostrarDetalhes] = useState(false);
+
+    function normalizarValor(valor: any, coluna: string) {
+        if (valor === null || valor === undefined) return valor;
+
+        let texto = String(valor);
+
+        // Remove acentos
+        texto = texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+        // Regra: Grupo Produto → remove TODOS os espaços
+        if (coluna === "Grupo Produto") {
+            texto = texto.replace(/\s+/g, "");
+        }
+
+        // Regra: Nome Produto → máximo 40 caracteres
+        if (coluna === "Nome Produto" && texto.length > 40) {
+            texto = texto.slice(0, 40);
+        }
+
+        return texto;
+    }
+
+
+    function exportarPlanilhaCorrigida() {
+        if (!workbookOriginal || !sheetNameOriginal) return;
+
+        const wsOriginal = workbookOriginal.Sheets[sheetNameOriginal];
+
+        const todasLinhas = XLSX.utils.sheet_to_json(wsOriginal, {
+            header: 1,
+            defval: "",
+        }) as any[][];
+
+        const cabecalhos = todasLinhas[5];
+        const novasLinhas = todasLinhas.slice(0, 6);
+
+        const alteracoes: any[] = [];
+
+        for (let i = 6; i < todasLinhas.length; i++) {
+            const linha = todasLinhas[i];
+            const novaLinha = [...linha];
+
+            linha.forEach((valor, colIndex) => {
+                const header = cabecalhos[colIndex];
+
+                if (typeof valor === "string" && header) {
+                    const corrigido = normalizarValor(valor, header);
+
+                    if (corrigido !== valor) {
+                        novaLinha[colIndex] = corrigido;
+
+                        alteracoes.push({
+                            linha: i + 1,
+                            coluna: header,
+                            antes: valor,
+                            depois: corrigido,
+                        });
+                    }
+                }
+            });
+
+            novasLinhas.push(novaLinha);
+        }
+
+        // Se nada mudou
+        if (alteracoes.length === 0) {
+            alert("Nenhum caractere especial encontrado. A planilha já está válida.");
+            return;
+        }
+
+        // Guarda alterações para UI
+        setCorrecoes(alteracoes);
+        setMostrarDetalhes(false);
+
+        const novaWs = XLSX.utils.aoa_to_sheet(novasLinhas);
+        const novoWb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(novoWb, novaWs, sheetNameOriginal);
+
+        XLSX.writeFile(novoWb, "planilha_corrigida.xlsx");
+    }
+
     function exportarErros(erros: any[]) {
         const rows: any[] = [];
 
@@ -44,10 +129,11 @@ export default function XmlTabela() {
         const reader = new FileReader();
 
         reader.onload = (evt) => {
+
             try {
                 const data = evt.target?.result as ArrayBuffer;
-
                 const workbook = XLSX.read(data, { type: "array" });
+
                 const sheetName = workbook.SheetNames.find(
                     (name) => name.toUpperCase().trim() === "PRODUTOS"
                 );
@@ -55,6 +141,9 @@ export default function XmlTabela() {
                 if (!sheetName) {
                     throw new Error('A planilha não contém uma aba chamada "PRODUTOS"');
                 }
+
+                setWorkbookOriginal(workbook);
+                setSheetNameOriginal(sheetName); // agora é string garantida
 
                 const sheet = workbook.Sheets[sheetName];
 
@@ -98,6 +187,7 @@ export default function XmlTabela() {
                 console.log("📊 Dados processados:", dados);
                 const erros = validarTabela(dados);
 
+                setDadosOriginais(dados); // 👈 guarda os dados para correção
                 setResultado({
                     totalRegistros: dados.length,
                     erros
@@ -130,6 +220,21 @@ export default function XmlTabela() {
     }
 
 
+    function Tooltip() {
+        return (
+            <div className="relative group">
+                <span className="ml-2 cursor-help text-slate-500 font-bold">?</span>
+
+                <div className="absolute z-10 hidden group-hover:block w-64 p-3 text-xs text-white bg-slate-800 rounded-lg shadow-lg -top-2 left-6">
+                    Remove caracteres especiais e acentos da planilha:
+                    <br />• "caça" → "caca"
+                    <br />• "ágil" → "agil"
+                    <br />• "pão" → "pao"
+                </div>
+            </div>
+        );
+    }
+
 
     return (
         <div className="max-w-6xl mx-auto">
@@ -155,21 +260,76 @@ export default function XmlTabela() {
                     {erro}
                 </div>
             )}
-            {resultado && resultado.erros.length > 0 && (
-                <button
-                    onClick={() => exportarErros(resultado.erros)}
-                    className="mb-6 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                >
-                    Exportar erros para Excel
-                </button>
-            )}
             {resultado && (
-                <button
-                    onClick={limparTudo}
-                    className="mb-6 ml-4 px-4 py-2 bg-slate-300 text-slate-800 rounded-lg hover:bg-slate-400"
-                >
-                    Limpar
-                </button>
+                <div className="mb-6 flex flex-wrap gap-4">
+                    {resultado.erros.length > 0 && (
+                        <button
+                            onClick={() => exportarErros(resultado.erros)}
+                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                        >
+                            Exportar erros
+                        </button>
+                    )}
+
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={exportarPlanilhaCorrigida}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                        >
+                            Baixar planilha corrigida
+                        </button>
+
+                        <Tooltip />
+                    </div>
+
+                    <button
+                        onClick={limparTudo}
+                        className="px-4 py-2 bg-slate-300 text-slate-800 rounded-lg hover:bg-slate-400"
+                    >
+                        Limpar
+                    </button>
+                </div>
+            )}
+            {correcoes.length > 0 && (
+                <div className="mt-4 bg-blue-50 border border-blue-300 p-4 rounded-xl">
+                    <div className="flex items-center justify-between">
+                        <span className="text-blue-800 font-semibold">
+                            {correcoes.length} valores foram corrigidos na planilha
+                        </span>
+
+                        <button
+                            onClick={() => setMostrarDetalhes(!mostrarDetalhes)}
+                            className="text-blue-600 underline text-sm"
+                        >
+                            {mostrarDetalhes ? "Ocultar detalhes" : "Ver mais detalhes"}
+                        </button>
+                    </div>
+
+                    {mostrarDetalhes && (
+                        <div className="mt-3 max-h-64 overflow-auto text-sm">
+                            <table className="w-full border-collapse">
+                                <thead>
+                                    <tr className="bg-blue-100">
+                                        <th className="p-2 border">Linha</th>
+                                        <th className="p-2 border">Coluna</th>
+                                        <th className="p-2 border">Antes</th>
+                                        <th className="p-2 border">Depois</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {correcoes.map((c, i) => (
+                                        <tr key={i}>
+                                            <td className="p-2 border">{c.linha}</td>
+                                            <td className="p-2 border">{c.coluna}</td>
+                                            <td className="p-2 border text-red-700">{c.antes}</td>
+                                            <td className="p-2 border text-green-700">{c.depois}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
             )}
 
             {resultado && (
