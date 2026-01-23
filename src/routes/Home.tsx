@@ -26,7 +26,7 @@ const utilities = [
     icon: <FiFolder size={24} />,
   },
   {
-    title: "Validador POS",
+    title: "Validador POS Controle",
     description:
       "Lê planilhas Excel ignorando linhas 1–5 e use a 6ª como cabeçalhos.",
     path: "/xml-tabela",
