@@ -104,7 +104,7 @@ export default function XmlTabela() {
 
         // Se nada mudou
         if (alteracoes.length === 0) {
-            alert("Nenhum caractere especial encontrado. A planilha já está válida.");
+            alert("Nenhuma correção automática a ser aplicada.");
             return;
         }
 
