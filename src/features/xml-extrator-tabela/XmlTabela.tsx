@@ -219,17 +219,37 @@ export default function XmlTabela() {
         }
     }
 
+    function exportarCorrecoes() {
+        if (correcoes.length === 0) {
+            alert("Nenhuma correção foi aplicada.");
+            return;
+        }
+
+        const ws = XLSX.utils.json_to_sheet(correcoes.map(c => ({
+            Linha: c.linha,
+            Coluna: c.coluna,
+            Antes: c.antes,
+            Depois: c.depois,
+        })));
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Correcoes");
+
+        XLSX.writeFile(wb, "detalhes_correcoes.xlsx");
+    }
 
     function Tooltip() {
         return (
             <div className="relative group">
                 <span className="ml-2 cursor-help text-slate-500 font-bold">?</span>
 
-                <div className="absolute z-10 hidden group-hover:block w-64 p-3 text-xs text-white bg-slate-800 rounded-lg shadow-lg -top-2 left-6">
-                    Remove caracteres especiais e acentos da planilha:
-                    <br />• "caça" → "caca"
-                    <br />• "ágil" → "agil"
-                    <br />• "pão" → "pao"
+                <div className="absolute z-10 hidden group-hover:block w-72 p-3 text-xs text-white bg-slate-800 rounded-lg shadow-lg -top-2 left-6">
+                    Correções automáticas aplicadas:
+                    <br />• Remove acentos: "ágil" → "agil"
+                    <br />• Remove espaços no Grupo Produto:
+                    <br />&nbsp;&nbsp;"Utensílios de Xícara" → "UtensiliosdeXicara"
+                    <br />• Nome Produto limitado a 40 caracteres
+                    <br />&nbsp;&nbsp;Tudo após o 40º caractere é removido
                 </div>
             </div>
         );
@@ -281,6 +301,15 @@ export default function XmlTabela() {
 
                         <Tooltip />
                     </div>
+
+                    {correcoes.length > 0 && (
+                        <button
+                            onClick={exportarCorrecoes}
+                            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                        >
+                            Baixar detalhes das correções
+                        </button>
+                    )}
 
                     <button
                         onClick={limparTudo}
