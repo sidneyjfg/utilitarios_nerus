@@ -18,20 +18,30 @@ export default function XmlTabela() {
 
         let texto = String(valor);
 
+        // Remove notação científica do Excel (ex: 7,89573E+12)
+        if (/^\d+([.,]\d+)?E\+\d+$/i.test(texto)) {
+            texto = Number(texto.replace(",", ".")).toFixed(0);
+        }
+
         // Remove acentos
         texto = texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-        // Regra: Grupo Produto → remove TODOS os espaços
+        // Grupo Produto → remove TODOS os espaços
         if (coluna === "Grupo Produto") {
             texto = texto.replace(/\s+/g, "");
         }
 
-        // Regra: Nome Produto → máximo 40 caracteres
+        // Nome Produto → máximo 40 caracteres
         if (coluna === "Nome Produto" && texto.length > 40) {
             texto = texto.slice(0, 40);
         }
 
-        return texto;
+        // Código de Barras SEMPRE texto
+        if (coluna === "Código Barra") {
+            return texto.trim(); // não deixa Excel converter
+        }
+
+        return texto.trim();
     }
 
 
@@ -87,6 +97,19 @@ export default function XmlTabela() {
         setMostrarDetalhes(false);
 
         const novaWs = XLSX.utils.aoa_to_sheet(novasLinhas);
+        // 🔒 Forçar coluna "Código Barra" como TEXTO
+        const colCodigoBarra = cabecalhos.indexOf("Código Barra");
+        const range = XLSX.utils.decode_range(novaWs["!ref"]!);
+
+        for (let R = 6; R <= range.e.r; ++R) {
+            const cellAddress = XLSX.utils.encode_cell({ r: R, c: colCodigoBarra });
+            const cell = novaWs[cellAddress];
+
+            if (cell) {
+                cell.t = "s"; // força string
+                cell.z = "@"; // formato texto no Excel
+            }
+        }
         const novoWb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(novoWb, novaWs, sheetNameOriginal);
 
