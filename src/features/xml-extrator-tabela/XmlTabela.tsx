@@ -7,7 +7,7 @@ export default function XmlTabela() {
     const [erro, setErro] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [dadosOriginais, setDadosOriginais] = useState<any[]>([]);
+    const [, setDadosOriginais] = useState<any[]>([]);
     const [workbookOriginal, setWorkbookOriginal] = useState<XLSX.WorkBook | null>(null);
     const [sheetNameOriginal, setSheetNameOriginal] = useState<string | null>(null);
     const [correcoes, setCorrecoes] = useState<any[]>([]);
@@ -50,10 +50,22 @@ export default function XmlTabela() {
 
         const wsOriginal = workbookOriginal.Sheets[sheetNameOriginal];
 
-        const todasLinhas = XLSX.utils.sheet_to_json(wsOriginal, {
-            header: 1,
-            defval: "",
-        }) as any[][];
+        const rangeOriginal = XLSX.utils.decode_range(wsOriginal["!ref"]!);
+        const todasLinhas: any[][] = [];
+
+        for (let R = 0; R <= rangeOriginal.e.r; R++) {
+            const linha: any[] = [];
+
+            for (let C = 0; C <= rangeOriginal.e.c; C++) {
+                const addr = XLSX.utils.encode_cell({ r: R, c: C });
+                const cell = wsOriginal[addr];
+
+                // ⚠️ w = texto exatamente como estava no Excel
+                linha.push(cell?.w ?? cell?.v ?? "");
+            }
+
+            todasLinhas.push(linha);
+        }
 
         const cabecalhos = todasLinhas[5];
         const novasLinhas = todasLinhas.slice(0, 6);
@@ -70,14 +82,18 @@ export default function XmlTabela() {
                 if (typeof valor === "string" && header) {
                     const corrigido = normalizarValor(valor, header);
 
-                    if (corrigido !== valor) {
+                    const originalRaw = String(valor);
+                    const corrigidoRaw = String(corrigido);
+
+                    if (corrigidoRaw.trim() !== originalRaw.trim()) {
                         novaLinha[colIndex] = corrigido;
+                        const diff = destacarDiferencas(originalRaw, corrigidoRaw);
 
                         alteracoes.push({
                             linha: i + 1,
                             coluna: header,
-                            antes: valor,
-                            depois: corrigido,
+                            antes: diff.antes,
+                            depois: diff.depois,
                         });
                     }
                 }
@@ -99,9 +115,9 @@ export default function XmlTabela() {
         const novaWs = XLSX.utils.aoa_to_sheet(novasLinhas);
         // 🔒 Forçar coluna "Código Barra" como TEXTO
         const colCodigoBarra = cabecalhos.indexOf("Código Barra");
-        const range = XLSX.utils.decode_range(novaWs["!ref"]!);
+        const rangeNovo = XLSX.utils.decode_range(novaWs["!ref"]!);
 
-        for (let R = 6; R <= range.e.r; ++R) {
+        for (let R = 6; R <= rangeNovo.e.r; ++R) {
             const cellAddress = XLSX.utils.encode_cell({ r: R, c: colCodigoBarra });
             const cell = novaWs[cellAddress];
 
@@ -231,16 +247,41 @@ export default function XmlTabela() {
         reader.readAsArrayBuffer(file);
     }
 
+    function destacarDiferencas(orig: string, novo: string) {
+        let outOrig = "";
+        let outNovo = "";
+
+        const max = Math.max(orig.length, novo.length);
+
+        for (let i = 0; i < max; i++) {
+            const o = orig[i] || "";
+            const n = novo[i] || "";
+
+            if (o !== n) {
+                outOrig += o === " " ? "␠" : o;
+                outNovo += n === " " ? "␠" : n;
+            } else {
+                outOrig += o;
+                outNovo += n;
+            }
+        }
+
+        return { antes: outOrig, depois: outNovo };
+    }
+
 
     function limparTudo() {
         setResultado(null);
         setErro(null);
         setLoading(false);
+        setCorrecoes([]);
+        setMostrarDetalhes(false);
 
         if (fileInputRef.current) {
             fileInputRef.current.value = "";
         }
     }
+
 
     function exportarCorrecoes() {
         if (correcoes.length === 0) {
