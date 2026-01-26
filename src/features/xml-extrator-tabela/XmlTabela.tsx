@@ -19,6 +19,16 @@ export default function XmlTabela() {
         "NFCeCSTCOFINS"
     ];
 
+    function normalizarGrupoProdutoParaExportar(valor: string) {
+        return valor
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/\s+e\s+/gi, " ")   // remove apenas " e " como separador
+            .replace(/,/g, "")
+            .replace(/\s+/g, "")        // remove todos os espaços
+            .replace(/[^A-Za-z0-9]/g, "")
+            .trim();
+    }
+
     function normalizarValor(valor: any, coluna: string) {
         if (valor === null || valor === undefined) return valor;
 
@@ -34,8 +44,9 @@ export default function XmlTabela() {
 
         // Grupo Produto → remove TODOS os espaços
         if (coluna === "Grupo Produto") {
-            texto = texto.replace(/\s+/g, "");
+            return texto; // NÃO toca aqui
         }
+
 
         // Nome Produto → máximo 40 caracteres
         if (coluna === "Nome Produto" && texto.length > 40) {
@@ -112,14 +123,47 @@ export default function XmlTabela() {
                 const header = cabecalhos[colIndex];
 
                 if (typeof valor === "string" && header) {
-                    const corrigido = normalizarValor(valor, header);
+                    let corrigido = normalizarValor(valor, header);
 
+                    if (header === "Grupo Produto") {
+                        corrigido = normalizarGrupoProdutoParaExportar(valor);
+                    }
                     const originalRaw = String(valor);
                     const corrigidoRaw = String(corrigido);
 
-                    if (corrigidoRaw.trim() !== originalRaw.trim()) {
-                        novaLinha[colIndex] = corrigido;
-                        const diff = destacarDiferencas(originalRaw, corrigidoRaw);
+                    let mudou = false;
+                    let valorFinal = corrigidoRaw;
+
+                    if (header === "Preço") {
+                        const orig = Number(originalRaw.replace("R$", "").replace(/\s/g, "").replace(",", "."));
+                        const novo = Number(corrigidoRaw.replace("R$", "").replace(/\s/g, "").replace(",", "."));
+
+                        if (orig !== novo) {
+                            mudou = true;
+                            valorFinal = corrigidoRaw;
+                        }
+                    } else {
+                        if (header === "Grupo Produto") {
+                            if (originalRaw !== corrigidoRaw) {
+                                mudou = true;
+                                valorFinal = corrigidoRaw;
+                            }
+                        } else {
+                            const originalClean = originalRaw.trim();
+                            const corrigidoClean = corrigidoRaw.trim();
+
+                            if (originalClean !== corrigidoClean) {
+                                mudou = true;
+                                valorFinal = corrigidoClean;
+                            }
+                        }
+
+                    }
+
+                    if (mudou) {
+                        novaLinha[colIndex] = valorFinal;
+
+                        const diff = destacarDiferencas(originalRaw, valorFinal);
 
                         alteracoes.push({
                             linha: i + 1,
@@ -148,7 +192,18 @@ export default function XmlTabela() {
         // 🔒 Forçar coluna "Código Barra" como TEXTO
         const colCodigoBarra = cabecalhos.indexOf("Código Barra");
         const rangeNovo = XLSX.utils.decode_range(novaWs["!ref"]!);
+        // 🔒 Forçar Grupo Produto como TEXTO (impede Excel de reformatar)
+        const colGrupoProduto = cabecalhos.indexOf("Grupo Produto");
 
+        for (let R = 6; R <= rangeNovo.e.r; ++R) {
+            const addr = XLSX.utils.encode_cell({ r: R, c: colGrupoProduto });
+            const cell = novaWs[addr];
+
+            if (cell) {
+                cell.t = "s";  // string
+                cell.z = "@";  // formato texto
+            }
+        }
         for (let R = 6; R <= rangeNovo.e.r; ++R) {
             const cellAddress = XLSX.utils.encode_cell({ r: R, c: colCodigoBarra });
             const cell = novaWs[cellAddress];
