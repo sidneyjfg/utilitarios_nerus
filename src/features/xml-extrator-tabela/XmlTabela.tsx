@@ -13,6 +13,12 @@ export default function XmlTabela() {
     const [correcoes, setCorrecoes] = useState<any[]>([]);
     const [mostrarDetalhes, setMostrarDetalhes] = useState(false);
 
+    const COLUNAS_2_DIGITOS = [
+        "Tipo Unidade",
+        "NFCeCSTPIS",
+        "NFCeCSTCOFINS"
+    ];
+
     function normalizarValor(valor: any, coluna: string) {
         if (valor === null || valor === undefined) return valor;
 
@@ -41,6 +47,20 @@ export default function XmlTabela() {
             return texto.trim(); // não deixa Excel converter
         }
 
+        // Preço → sempre com vírgula e sem "R$"
+        if (coluna === "Preço") {
+            let s = texto
+                .replace("R$", "")
+                .replace(/\s/g, "")
+                .replace(".", ","); // Excel pode vir 4.96
+
+            return s;
+        }
+
+        // Campos de 2 dígitos → NÃO normalizar, apenas preservar texto
+        if (COLUNAS_2_DIGITOS.includes(coluna)) {
+            return texto.trim();
+        }
         return texto.trim();
     }
 
@@ -50,26 +70,38 @@ export default function XmlTabela() {
 
         const wsOriginal = workbookOriginal.Sheets[sheetNameOriginal];
 
+        // 1️⃣ Primeiro: lê tudo sem alterar nada
         const rangeOriginal = XLSX.utils.decode_range(wsOriginal["!ref"]!);
         const todasLinhas: any[][] = [];
 
         for (let R = 0; R <= rangeOriginal.e.r; R++) {
             const linha: any[] = [];
-
             for (let C = 0; C <= rangeOriginal.e.c; C++) {
                 const addr = XLSX.utils.encode_cell({ r: R, c: C });
                 const cell = wsOriginal[addr];
-
-                // ⚠️ w = texto exatamente como estava no Excel
                 linha.push(cell?.w ?? cell?.v ?? "");
             }
-
             todasLinhas.push(linha);
         }
 
+        // 2️⃣ Agora sim podemos pegar os cabeçalhos
         const cabecalhos = todasLinhas[5];
-        const novasLinhas = todasLinhas.slice(0, 6);
 
+        // 3️⃣ Agora sim podemos corrigir Código Barra
+        for (let R = 6; R < todasLinhas.length; R++) {
+            for (let C = 0; C < cabecalhos.length; C++) {
+                if (cabecalhos[C] === "Código Barra") {
+                    const addr = XLSX.utils.encode_cell({ r: R, c: C });
+                    const cell = wsOriginal[addr];
+
+                    if (cell?.t === "n") {
+                        todasLinhas[R][C] = cell.v.toFixed(0); // restaura código real
+                    }
+                }
+            }
+        }
+
+        const novasLinhas = todasLinhas.slice(0, 6);
         const alteracoes: any[] = [];
 
         for (let i = 6; i < todasLinhas.length; i++) {
@@ -124,6 +156,18 @@ export default function XmlTabela() {
             if (cell) {
                 cell.t = "s"; // força string
                 cell.z = "@"; // formato texto no Excel
+            }
+        }
+        // 🔒 Forçar coluna "Preço" como TEXTO (impede R$ e ponto)
+        const colPreco = cabecalhos.indexOf("Preço");
+
+        for (let R = 6; R <= rangeNovo.e.r; ++R) {
+            const cellAddress = XLSX.utils.encode_cell({ r: R, c: colPreco });
+            const cell = novaWs[cellAddress];
+
+            if (cell) {
+                cell.t = "s";   // string
+                cell.z = "@";   // formato texto
             }
         }
         const novoWb = XLSX.utils.book_new();
@@ -186,7 +230,25 @@ export default function XmlTabela() {
 
                 const sheet = workbook.Sheets[sheetName];
 
-                const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as any[][];
+                const range = XLSX.utils.decode_range(sheet["!ref"]!);
+                const rows: any[][] = [];
+
+                for (let R = 0; R <= range.e.r; R++) {
+                    const linha: any[] = [];
+
+                    for (let C = 0; C <= range.e.c; C++) {
+                        const addr = XLSX.utils.encode_cell({ r: R, c: C });
+                        const cell = sheet[addr];
+
+                        if (cell?.t === "n" && rows[5]?.[C] === "Código Barra") {
+                            linha.push(cell.v.toFixed(0));
+                        } else {
+                            linha.push(cell?.w ?? cell?.v ?? null);
+                        }
+                    }
+
+                    rows.push(linha);
+                }
 
                 // DEBUG — mostra todas as linhas lidas do Excel
                 console.log("📄 Todas as linhas da planilha:", rows);

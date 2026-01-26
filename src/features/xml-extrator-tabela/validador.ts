@@ -8,6 +8,25 @@ function fmtValor(valor: any) {
 function isBlank(valor: any) {
     return valor === null || valor === undefined || String(valor).trim() === "";
 }
+function parsePreco(valor: any): number | null {
+    if (valor === null || valor === undefined) return null;
+
+    let s = String(valor).trim();
+
+    if (s === "") return null;
+
+    // remove R$, espaços e milhares
+    s = s.replace("R$", "").replace(/\s/g, "");
+
+    // troca vírgula por ponto
+    s = s.replace(",", ".");
+
+    const n = Number(s);
+    if (Number.isNaN(n)) return null;
+
+    return n;
+}
+
 
 export function validarTabela(dados: any[]) {
     const erros: any[] = [];
@@ -93,8 +112,8 @@ export function validarTabela(dados: any[]) {
             // ===== min =====
             if (regra.min !== undefined) {
                 if (!isBlank(valor)) {
-                    const num = Number(valor);
-                    if (Number.isNaN(num) || num < regra.min) {
+                    const num = parsePreco(valor);
+                    if (num === null || num < regra.min) {
                         errosLinha.push({
                             coluna,
                             valor: fmtValor(valor),
@@ -124,6 +143,18 @@ export function validarTabela(dados: any[]) {
                         coluna,
                         valor: fmtValor(valor),
                         mensagem: `deve ter exatamente ${regra.length} caracteres`,
+                    });
+                }
+            }
+            // ===== validate custom =====
+            if (regra.validate) {
+                const result = regra.validate(valor, linha);
+
+                if (result !== true) {
+                    errosLinha.push({
+                        coluna,
+                        valor: fmtValor(valor),
+                        mensagem: String(result),
                     });
                 }
             }

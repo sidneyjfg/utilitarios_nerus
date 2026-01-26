@@ -34,10 +34,30 @@ export const regras = {
     },
 
     "NFCeCEST": {
-        digits: 7,
         requiredIf: (linha: any) => String(linha["NFCeCST"]) === "110",
+
         requiredIfMessage: (linha: any) =>
             `NFCeCST está "${linha["NFCeCST"]}", logo NFCeCEST deve estar preenchido obrigatoriamente`,
+
+        validate: (valor: any, linha: any) => {
+            // Se CST ≠ 110 → ignora completamente o campo
+            if (String(linha["NFCeCST"]) !== "110") {
+                return true;
+            }
+
+            // CST = 110 → obrigatório
+            if (valor === null || valor === undefined || String(valor).trim() === "" || Number(valor) === 0) {
+                return "deve ser preenchido quando NFCeCST for 110";
+            }
+
+            const s = String(valor).trim();
+
+            if (!/^\d{7}$/.test(s)) {
+                return "deve conter exatamente 7 dígitos quando NFCeCST for 110";
+            }
+
+            return true;
+        }
     },
     "NFCeCSTPIS": {
         digits: 2,
@@ -50,7 +70,6 @@ export const regras = {
     },
     "NFCeCSTCOFINS": {
         digits: 2,
-        min: 2,
         required: true,
     },
     "NFCeAliqCOFINS": {
