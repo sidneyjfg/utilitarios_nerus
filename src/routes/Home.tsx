@@ -48,7 +48,7 @@ function Home() {
     <div className="mt-10 select-none">
       {/* Título */}
       <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-3">
-        Utilitários Nerus
+        Utilitários Nérus
       </h1>
 
       {/* Subtítulo */}

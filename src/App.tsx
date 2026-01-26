@@ -16,7 +16,7 @@ function App() {
             to="/"
             className="text-2xl font-bold tracking-tight hover:opacity-90 transition-opacity"
           >
-            Utilitários Nerus
+            Utilitários Nérus
           </Link>
 
           <span className="text-sm opacity-90">
@@ -39,7 +39,7 @@ function App() {
       {/* Rodapé */}
       <footer className="border-t bg-white py-4 mt-6">
         <div className="container mx-auto px-4 text-xs text-slate-500 text-center">
-          Utilitários Nerus • {new Date().getFullYear()}
+          Utilitários Nérus • {new Date().getFullYear()}
         </div>
       </footer>
     </div>
