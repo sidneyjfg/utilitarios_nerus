@@ -20,7 +20,7 @@ const utilities = [
   },
   {
     title: "Extrair e Buscar XMLs em ZIPs",
-    description: "Extraia ZIPs recursivamente e filtre XMLs por nome, com resumo automático.",
+    description: "Extraia ZIPs recursivamente normalize XMLs e filtre XMLs por nome, com resumo automático.",
     path: "/extrator-xml",
     badge: "Ativo",
     icon: <FiFolder size={24} />,

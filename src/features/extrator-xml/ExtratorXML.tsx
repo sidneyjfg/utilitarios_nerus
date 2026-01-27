@@ -16,6 +16,92 @@ export default function ExtratorXML() {
 
     const [showSummary, setShowSummary] = useState(false);
     const [summaryText, setSummaryText] = useState("");
+    const [normalizeFiles, setNormalizeFiles] = useState<File[]>([]);
+
+
+    const extractAnyInput = async (file: File): Promise<ExtractedFile[]> => {
+        // XML solto
+        if (file.name.toLowerCase().endsWith(".xml")) {
+            return [{ name: file.name, content: file }];
+        }
+
+        // ZIP
+        if (file.name.toLowerCase().endsWith(".zip")) {
+            return extractZipRecursive(file);
+        }
+
+        return [];
+    };
+
+    const normalizePipeline = async () => {
+        setProcessing(true);
+        setResults([]);
+
+        let all: ExtractedFile[] = [];
+
+        // 1️⃣ Extrai tudo
+        for (const file of normalizeFiles) {
+            const extracted = await extractAnyInput(file);
+            all.push(...extracted);
+        }
+
+        // 2️⃣ Normaliza só os XMLs
+        const normalized: ExtractedFile[] = [];
+
+        for (const file of all) {
+            if (!file.name.toLowerCase().endsWith(".xml")) continue;
+
+            const xml = await normalizeXML(file.content);
+
+            normalized.push({
+                name: file.name,
+                content: xml,
+            });
+        }
+
+        setResults(normalized);
+        setProcessing(false);
+    };
+
+    const normalizeXML = async (blob: Blob): Promise<Blob> => {
+        const text = await blob.text();
+
+        let xml = text
+            .replace(/\r/g, "")
+            .replace(/\n/g, "")
+            .replace(/\t/g, "")
+            .replace(/>\s+</g, "><")
+            .trim();
+
+        // Garante header XML
+        if (!xml.startsWith("<?xml")) {
+            xml = `<?xml version="1.0" encoding="UTF-8"?>${xml}`;
+        }
+
+        return new Blob([xml], { type: "application/xml" });
+    };
+    const normalizeResults = async () => {
+        setProcessing(true);
+
+        const novos: ExtractedFile[] = [];
+
+        for (const file of results) {
+            if (!file.name.toLowerCase().endsWith(".xml")) {
+                novos.push(file); // mantém outros arquivos
+                continue;
+            }
+
+            const xmlNormalizado = await normalizeXML(file.content);
+
+            novos.push({
+                name: file.name,
+                content: xmlNormalizado,
+            });
+        }
+
+        setResults(novos);
+        setProcessing(false);
+    };
 
     // Normalize filename (remove folders)
     const normalizeName = (name: string) => name.split("/").pop() || name;
@@ -195,6 +281,29 @@ export default function ExtratorXML() {
                 >
                     {processing ? "Buscando..." : "Buscar por chaves"}
                 </button>
+                <div className="p-4 border rounded-xl bg-white shadow-sm mb-8">
+                    <h2 className="text-lg font-semibold mb-2">
+                        3️⃣ Normalizar XML (ZIP ou XML)
+                    </h2>
+
+                    <input
+                        type="file"
+                        multiple
+                        accept=".xml,.zip"
+                        onChange={(e) =>
+                            setNormalizeFiles(e.target.files ? Array.from(e.target.files) : [])
+                        }
+                    />
+
+                    <button
+                        onClick={normalizePipeline}
+                        disabled={processing || normalizeFiles.length === 0}
+                        className="mt-3 px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
+                    >
+                        {processing ? "Processando..." : "Normalizar XMLs"}
+                    </button>
+                </div>
+
             </div>
 
             {/* ======================================================== */}
@@ -214,6 +323,13 @@ export default function ExtratorXML() {
                     </pre>
 
                     <div className="flex justify-end gap-2 mt-3">
+                        <button
+                            onClick={normalizeResults}
+                            className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700"
+                        >
+                            🧹 Normalizar XML
+                        </button>
+
                         <button
                             onClick={downloadZip}
                             className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"

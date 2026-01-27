@@ -1,0 +1,62 @@
+%vars
+$ST={:m:Status:;0;S}|Todos|Ok|OK Promo|Divergente|
+%
+#
+SELECT
+    prdno,
+
+    saldo AS SALDO
+FROM
+    sqltmp.estoque
+#
+#
+SELECT
+    IFNULL(any.prdno,'NAO CADASTRADO NO NERUS')                         AS Codigo,
+    any.grade                                                           AS Grade,
+    MID(prd.name,1,38)                                                  AS Descricao,
+    any.codigo                                                          AS CodigoTray,
+    REPLACE(REPLACE(any.preco,',',''),'.','')                           AS PrecoTray,
+    REPLACE(REPLACE(any.preco_promo,',',''),'.','')                     AS PrecoPromoTray,
+    ROUND(prp.refprice * IF(prd.mult < 1000, 1,ROUND(prd.mult/1000,2))) AS PrecoNerus,
+    ROUND(promoprd.price * IF(prd.mult < 1000, 1,ROUND(prd.mult/1000,2))) AS PrecoPromoNerus,
+    CASE
+       WHEN promoprd.price IS NOT NULL
+              AND ROUND(REPLACE(REPLACE(any.preco_promo,',',''),'.','') - ROUND(promoprd.price * IF(prd.mult < 1000, 1,ROUND(prd.mult/1000,2)))) = 0 THEN 'OK Promo'
+       WHEN prp.refprice IS NOT NULL
+              AND ROUND(REPLACE(REPLACE(any.preco,',',''),'.','') - ROUND(prp.refprice * IF(prd.mult < 1000, 1,ROUND(prd.mult/1000,2)))) = 0 THEN 'OK - SEM PROMO'
+       ELSE 'Divergente'
+    END AS Status,
+CONCAT(REPLACE(ROUND((( REPLACE(REPLACE(any.preco,',',''),'.','')  - ROUND(prp.refprice * IF(prd.mult < 1000, 1,ROUND(prd.mult/1000,2)))) / ROUND(prp.refprice * IF(prd.mult < 1000, 1,ROUND(prd.mult/1000,2)))) * 100,2),'.',','),'%') A$
+FROM
+    sqlmonitoramento.produtosTray any
+LEFT JOIN
+    [BANCO].prp ON (prp.prdno = any.prdno)
+LEFT JOIN
+    [BANCO].prd ON (prd.no = any.prdno)
+LEFT JOIN
+    [TABELA] t1 ON (t1.prdno = any.prdno )
+LEFT JOIN
+    [BANCO].promoprd ON (promoprd.prdno = any.prdno)
+LEFT JOIN
+    [BANCO].promo ON (promo.no = promoprd.promono)
+Left JOIN
+    [BANCO].promo2 USING (promono)
+WHERE
+    prp.storeno = 3
+    AND any.estoque >0
+    AND NOT (prd.dereg&pow(2,8))
+    AND (CURDATE()+0 BETWEEN promo.begdate AND promo.enddate) AND IF(promo.auxShort1&pow(2,4), ((promo2.begtime=0 AND promo2.endtime=0) OR (TIME_TO_SEC(curtime()+0) BETWEEN promo2.begtime AND promo2.endtime)), 1)
+GROUP BY
+    prd.no
+ORDER BY
+    prp.prdno
+#
+SELECT * FROM [TABELA2]
+WHERE
+        CASE
+                WHEN [$ST] = 0 THEN 1 = 1
+                WHEN [$ST] = 1 THEN status = 'OK'
+                WHEN [$ST] = 2 THEN status != 'OK'
+                WHEN [$ST] = 3 THEN status = 'OK Promo'
+                WHEN [$ST] = 4 THEN status != 'OK Promo'
+        END
