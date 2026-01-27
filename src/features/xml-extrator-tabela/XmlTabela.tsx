@@ -61,11 +61,15 @@ export default function XmlTabela() {
         // Preço → sempre com vírgula e sem "R$"
         if (coluna === "Preço") {
             let s = texto
-                .replace("R$", "")
+                .replace(/R\$/gi, "")
                 .replace(/\s/g, "")
-                .replace(".", ","); // Excel pode vir 4.96
+                .replace(/\./g, "")
+                .replace(",", ".");
 
-            return s;
+            const num = Number(s);
+            if (isNaN(num)) return texto;
+
+            return num.toFixed(2).replace(".", ",");
         }
 
         // Campos de 2 dígitos → NÃO normalizar, apenas preservar texto
@@ -90,7 +94,11 @@ export default function XmlTabela() {
             for (let C = 0; C <= rangeOriginal.e.c; C++) {
                 const addr = XLSX.utils.encode_cell({ r: R, c: C });
                 const cell = wsOriginal[addr];
-                linha.push(cell?.w ?? cell?.v ?? "");
+                if (cell?.t === "n") {
+                    linha.push(cell.v); // número REAL, sem R$, sem formatação
+                } else {
+                    linha.push(cell?.v ?? "");
+                }
             }
             todasLinhas.push(linha);
         }
@@ -216,15 +224,29 @@ export default function XmlTabela() {
         // 🔒 Forçar coluna "Preço" como TEXTO (impede R$ e ponto)
         const colPreco = cabecalhos.indexOf("Preço");
 
-        for (let R = 6; R <= rangeNovo.e.r; ++R) {
-            const cellAddress = XLSX.utils.encode_cell({ r: R, c: colPreco });
-            const cell = novaWs[cellAddress];
+        for (let R = 6; R <= rangeNovo.e.r; R++) {
+            const addr = XLSX.utils.encode_cell({ r: R, c: colPreco });
+            const cell = novaWs[addr];
 
-            if (cell) {
-                cell.t = "s";   // string
-                cell.z = "@";   // formato texto
-            }
+            if (!cell) continue;
+
+            let v = String(cell.v)
+                .replace(/R\$/gi, "")
+                .replace(/\s/g, "")
+                .replace(",", ".");   // se veio "4,96"
+
+            const num = Number(v);
+            if (isNaN(num)) continue;
+
+            const textoFinal = num.toFixed(2).replace(".", ",");
+
+            // 🔒 grava como TEXTO REAL
+            cell.v = textoFinal;
+            cell.t = "s";
+            cell.z = "@";
+            delete cell.w;
         }
+
         const novoWb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(novoWb, novaWs, sheetNameOriginal);
 
