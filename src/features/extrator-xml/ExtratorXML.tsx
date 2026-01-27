@@ -42,12 +42,19 @@ export default function ExtratorXML() {
         };
     };
 
-    const normalizeDate = (date: string) => {
+    const normalizeDate = (date: string, mode: "month" | "day" = "day") => {
         if (!date) return "SEM-DATA";
 
-        const d = date.substring(0, 7); // YYYY-MM
-        return d.replace("/", "-");
+        // pega só a parte da data (funciona para "2024-01-15T10:00:00", "2024-01-15", etc.)
+        const onlyDate = date.substring(0, 10).replace(/\//g, "-");
+
+        if (mode === "month") {
+            return onlyDate.substring(0, 7); // YYYY-MM
+        }
+
+        return onlyDate; // YYYY-MM-DD
     };
+
 
     const extractAnyInput = async (file: File): Promise<ExtractedFile[]> => {
         if (file.name.toLowerCase().endsWith(".xml")) {
@@ -252,14 +259,20 @@ export default function ExtratorXML() {
     // -------------------------------------------------------------
     const downloadZip = async () => {
         const zip = new JSZip();
+        const safeFolder = (s: string) =>
+            (s || "SEM").replace(/[\\/:*?"<>|]/g, "-").trim();
 
         for (const file of results) {
             if (!file.meta) continue;
 
-            const natOp = file.meta.natOp || "SEM-NATOP";
-            const data = normalizeDate(file.meta.data);
+            const natOp = safeFolder(file.meta.natOp || "SEM-NATOP");
 
-            const pasta = `${natOp}/${data}`;
+            // Cria as duas camadas: mês e dia
+            const mes = normalizeDate(file.meta.data, "month"); // YYYY-MM
+            const dia = normalizeDate(file.meta.data, "day");   // YYYY-MM-DD
+
+            // Estrutura: NATOP / YYYY-MM / YYYY-MM-DD / arquivo.xml
+            const pasta = `${natOp}/${mes}/${dia}`;
 
             zip.file(`${pasta}/${file.name}`, file.content);
         }
@@ -273,6 +286,7 @@ export default function ExtratorXML() {
         a.click();
         URL.revokeObjectURL(url);
     };
+
 
 
     return (
