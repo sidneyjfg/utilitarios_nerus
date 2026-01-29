@@ -43,6 +43,24 @@ export default function XmlTabela() {
     const COLUNAS_2_DIGITOS = ["Tipo Unidade", "NFCeCSTPIS", "NFCeCSTCOFINS"];
     const COLUNAS_DECIMAIS = ["NFCeAliqPIS", "NFCeAliqCOFINS"];
 
+    function montarNomeProduto(descricao: any, codigo: any) {
+        const desc = String(descricao ?? "").trim();
+        const cod = String(codigo ?? "").trim();
+
+        const separador = "-";
+        const maxTotal = 40;
+
+        // código + "-" já ocupam isso
+        const reservado = cod.length + separador.length;
+
+        const maxDesc = maxTotal - reservado;
+
+        const descFinal = desc.slice(0, Math.max(0, maxDesc));
+
+        return `${cod}${separador}${descFinal}`.slice(0, 40);
+    }
+
+
     function normalizarGrupoProdutoParaExportar(valor: string) {
         return String(valor ?? "")
             .normalize("NFD")
@@ -206,7 +224,18 @@ export default function XmlTabela() {
 
         // garante que vamos escrever conforme os cabeçalhos atuais
         const headers = cabecalhos.length ? cabecalhos : (todasLinhas[5] ?? []).filter(Boolean);
-        const aoaDados = dados.map((d) => objParaLinhaAoA(d, headers));
+        const aoaDados = dados.map((d) => {
+            const copia = { ...d };
+
+            if (headers.includes("Nome Produto")) {
+                copia["Nome Produto"] = montarNomeProduto(
+                    d["Descrição Produto"],
+                    d["Código Interno"]
+                );
+            }
+
+            return objParaLinhaAoA(copia, headers);
+        });
 
         // começa na linha 7 (index 6)
         aoaDados.forEach((linha) => novasLinhas.push(linha));
