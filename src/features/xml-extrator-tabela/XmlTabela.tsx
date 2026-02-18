@@ -228,9 +228,22 @@ export default function XmlTabela() {
             const copia = { ...d };
 
             if (headers.includes("Nome Produto")) {
+
+                const descKey = headers.find(h =>
+                    h.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                        .toLowerCase()
+                        .includes("descricao")
+                );
+
+                const codKey = headers.find(h =>
+                    h.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                        .toLowerCase()
+                        .includes("interno")
+                );
+
                 copia["Nome Produto"] = montarNomeProduto(
-                    d["Descrição Produto"],
-                    d["Código Interno"]
+                    descKey ? d[descKey] : "",
+                    codKey ? d[codKey] : ""
                 );
             }
 
