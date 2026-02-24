@@ -226,27 +226,6 @@ export default function XmlTabela() {
         const headers = cabecalhos.length ? cabecalhos : (todasLinhas[5] ?? []).filter(Boolean);
         const aoaDados = dados.map((d) => {
             const copia = { ...d };
-
-            if (headers.includes("Nome Produto")) {
-
-                const descKey = headers.find(h =>
-                    h.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                        .toLowerCase()
-                        .includes("descricao")
-                );
-
-                const codKey = headers.find(h =>
-                    h.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                        .toLowerCase()
-                        .includes("interno")
-                );
-
-                copia["Nome Produto"] = montarNomeProduto(
-                    descKey ? d[descKey] : "",
-                    codKey ? d[codKey] : ""
-                );
-            }
-
             return objParaLinhaAoA(copia, headers);
         });
 
@@ -364,8 +343,28 @@ export default function XmlTabela() {
     ): { corrigidos: any[]; correcoes: Correcao[] } {
         const alteracoes: Correcao[] = [];
 
+        // 🔎 desc/cod encontrados 1x só (evita recalcular por linha)
+        const descKey = headers.find(h =>
+            h.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .includes("descricao")
+        );
+
+        const codKey = headers.find(h =>
+            h.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .includes("interno")
+        );
+
         const corrigidos = dados.map((linha, idx) => {
             const nova: any = { ...linha, __idx: linha.__idx };
+
+            // ✅ 1) Gera "Nome Produto" final ANTES de normalizar/validar
+            if (headers.includes("Nome Produto")) {
+                const desc = descKey ? linha[descKey] : "";
+                const cod = codKey ? linha[codKey] : "";
+                nova["Nome Produto"] = montarNomeProduto(desc, cod);
+            }
 
             headers.forEach((coluna) => {
                 const valorOrig = nova[coluna];
@@ -391,7 +390,6 @@ export default function XmlTabela() {
                 if (coluna === "Preço") {
                     const o = parsePrecoParaNumero(origRaw);
                     const n = parsePrecoParaNumero(corrRaw);
-
                     if (o !== n) mudou = true;
                 } else {
                     if (origRaw.trim() !== corrRaw.trim()) mudou = true;
@@ -415,6 +413,50 @@ export default function XmlTabela() {
         });
 
         return { corrigidos, correcoes: alteracoes };
+    }
+
+    function validarDuplicadosNomeProduto(dados: any[]) {
+        const mapa = new Map<string, number[]>(); // nome -> idxs
+
+        dados.forEach((row) => {
+            const nome = String(row?.["Nome Produto"] ?? "").trim();
+            if (!nome) return;
+
+            const arr = mapa.get(nome) ?? [];
+            arr.push(row.__idx); // usa __idx (índice real)
+            mapa.set(nome, arr);
+        });
+
+        const erros: any[] = [];
+
+        for (const [nome, idxs] of mapa.entries()) {
+            if (idxs.length <= 1) continue;
+
+            idxs.forEach((realIdx) => {
+                erros.push({
+                    linha: 7 + realIdx,
+                    codigoInterno: rowCodigoInternoSafe(dados, realIdx), // opcional, helper abaixo
+                    nomeProduto: nome,
+                    erros: [
+                        {
+                            coluna: "Nome Produto",
+                            valor: nome,
+                            mensagem: `Nome Produto duplicado (${idxs.length} ocorrências)`,
+                        },
+                    ],
+                });
+            });
+        }
+
+        return erros;
+    }
+
+    // helper opcional: tenta achar "Código Interno" pra preencher na exportação de erros
+    function rowCodigoInternoSafe(dados: any[], realIdx: number) {
+        const row = dados.find(r => r.__idx === realIdx);
+        if (!row) return "";
+        // tenta chaves comuns (ajuste se seu header for outro)
+        return row["Código Interno"] ?? row["Codigo Interno"] ?? row["CODIGO INTERNO"] ?? "";
     }
 
     function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -491,6 +533,7 @@ export default function XmlTabela() {
 
                 setDadosOriginais(dados);
 
+                // ✅ pode continuar existindo, mas duplicado de "Nome Produto" não deve decidir nada aqui
                 const errosAntes = validarTabela(dados);
 
                 // aplica correções + gera lista de diffs
@@ -498,37 +541,35 @@ export default function XmlTabela() {
                 setDadosCorrigidos(corrigidos);
                 setCorrecoes(diffs);
 
-                // valida novamente após correção
-                const errosDepois = validarTabela(corrigidos);
+                // ✅ valida novamente após correção
+                // (a duplicidade de Nome Produto deve ser validada AQUI)
+                let errosDepois = validarTabela(corrigidos);
 
-                // set de linhas inválidas (linha excel -> índice dados: linha - 7)
-                const invalidIdx = new Set<number>();
+                // ✅ adiciona validação de duplicados (pós-correção)
+                errosDepois = [...errosDepois, ...validarDuplicadosNomeProduto(corrigidos)];
 
+                // ✅ set de linhas inválidas baseado no índice real (__idx)
+                const invalidSet = new Set<number>();
                 errosDepois.forEach((e: any) => {
                     if (typeof e.linha === "number") {
-                        const idx = e.linha - 7;   // linha Excel → índice do array
-                        if (idx >= 0) invalidIdx.add(idx);
+                        const realIdx = e.linha - 7; // linha Excel -> __idx
+                        if (realIdx >= 0) invalidSet.add(realIdx);
                     }
                 });
 
-                const validos = corrigidos.filter(p => !invalidIdx.has(p.__idx));
-                const invalidos = corrigidos.filter(p => invalidIdx.has(p.__idx));
+                const validos = corrigidos.filter(p => !invalidSet.has(p.__idx));
+                const invalidos = corrigidos.filter(p => invalidSet.has(p.__idx));
 
                 // conta quantos eram inválidos e viraram válidos (ajustados)
-                const invalidAntesIdx = new Set<number>();
+                const invalidAntesSet = new Set<number>();
                 errosAntes.forEach((e: any) => {
                     const idx = (e.linha ?? 0) - 7;
-                    if (idx >= 0) invalidAntesIdx.add(idx);
+                    if (idx >= 0) invalidAntesSet.add(idx);
                 });
 
-                let ajustados = 0;
-                validos.forEach((_: any, i: number) => {
-                    // i aqui é índice no array "validos", então precisamos checar pelo índice real no "corrigidos"
-                    // melhor: percorre corrigidos
-                });
-                ajustados = corrigidos.reduce((acc, _row, idx) => {
-                    const eraInvalido = invalidAntesIdx.has(idx);
-                    const agoraValido = !invalidIdx.has(idx);
+                const ajustados = corrigidos.reduce((acc, _row, idx) => {
+                    const eraInvalido = invalidAntesSet.has(idx);
+                    const agoraValido = !invalidSet.has(idx);
                     return acc + (eraInvalido && agoraValido ? 1 : 0);
                 }, 0);
 
