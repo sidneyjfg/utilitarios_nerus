@@ -153,9 +153,19 @@ export default function XmlTabela() {
 
         // Preço → sempre com vírgula e sem "R$"
         if (coluna === "Preço") {
-            const n = parsePrecoParaNumero(texto);
-            if (n === null) return texto;
-            return formatarPrecoBR(n);
+            const textoOriginal = String(valor ?? "").trim();
+
+            // Se tiver R$, normaliza completamente
+            if (/R\$/i.test(textoOriginal)) {
+                const n = parsePrecoParaNumero(textoOriginal);
+                if (n === null) return textoOriginal;
+                return formatarPrecoBR(n);
+            }
+
+            // 🔥 Se NÃO tiver R$, apenas troca ponto por vírgula
+            return textoOriginal
+                .replace(/\s/g, "")
+                .replace(".", ",");
         }
 
         if (COLUNAS_DECIMAIS.includes(coluna)) {
@@ -272,10 +282,7 @@ export default function XmlTabela() {
                     const cell = novaWs[addr];
                     if (!cell) continue;
 
-                    const n = parsePrecoParaNumero(cell.v);
-                    if (n === null) continue;
-
-                    const textoFinal = formatarPrecoBR(n);
+                    const textoFinal = String(cell.v).trim();
                     cell.v = textoFinal;
                     cell.t = "s";
                     cell.z = "@";
