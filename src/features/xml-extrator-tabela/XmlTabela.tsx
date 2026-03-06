@@ -147,6 +147,16 @@ export default function XmlTabela() {
 
             return t;
         }
+        // NFCeCEST → 0 deve virar vazio
+        if (coluna === "NFCeCEST") {
+            const t = String(valor ?? "").trim();
+
+            if (t === "0" || t === "0.0" || t === "0.00") {
+                return "";
+            }
+
+            return t;
+        }
 
         // Grupo Produto → NÃO mexe aqui (tratado depois)
         if (coluna === "Grupo Produto") {
