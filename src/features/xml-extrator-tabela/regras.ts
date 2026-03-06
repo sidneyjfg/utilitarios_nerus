@@ -40,17 +40,26 @@ export const regras = {
             `NFCeCST está "${linha["NFCeCST"]}", logo NFCeCEST deve estar preenchido obrigatoriamente`,
 
         validate: (valor: any, linha: any) => {
-            // Se CST ≠ 110 → ignora completamente o campo
-            if (String(linha["NFCeCST"]) !== "110") {
+            const cst = String(linha["NFCeCST"]);
+
+            // Se CST ≠ 110 → campo pode ficar vazio
+            if (cst !== "110") {
+                if (valor === 0 || String(valor).trim() === "0") {
+                    return "não pode ser 0";
+                }
                 return true;
             }
 
             // CST = 110 → obrigatório
-            if (valor === null || valor === undefined || String(valor).trim() === "" || Number(valor) === 0) {
+            if (valor === null || valor === undefined || String(valor).trim() === "") {
                 return "deve ser preenchido quando NFCeCST for 110";
             }
 
             const s = String(valor).trim();
+
+            if (s === "0") {
+                return "não pode ser 0";
+            }
 
             if (!/^\d{7}$/.test(s)) {
                 return "deve conter exatamente 7 dígitos quando NFCeCST for 110";

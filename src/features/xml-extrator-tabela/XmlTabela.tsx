@@ -136,6 +136,18 @@ export default function XmlTabela() {
         // Remove acentos
         texto = texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
+        // Código Interno → remover .00 do final
+        if (coluna === "Código Interno") {
+            let t = String(valor).trim();
+
+            // se for número decimal do Excel (ex: 1226.00)
+            if (/^\d+\.00$/.test(t)) {
+                return t.split(".")[0];
+            }
+
+            return t;
+        }
+
         // Grupo Produto → NÃO mexe aqui (tratado depois)
         if (coluna === "Grupo Produto") {
             return texto;
