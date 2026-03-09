@@ -41,28 +41,24 @@ export const regras = {
 
         validate: (valor: any, linha: any) => {
             const cst = String(linha["NFCeCST"]);
+            const s = String(valor ?? "").trim();
 
-            // Se CST ≠ 110 → campo pode ficar vazio
-            if (cst !== "110") {
-                if (valor === 0 || String(valor).trim() === "0") {
-                    return "não pode ser 0";
+            // Se estiver vazio
+            if (s === "") {
+                if (cst === "110") {
+                    return "deve ser preenchido quando NFCeCST for 110";
                 }
                 return true;
             }
 
-            // CST = 110 → obrigatório
-            if (valor === null || valor === undefined || String(valor).trim() === "") {
-                return "deve ser preenchido quando NFCeCST for 110";
-            }
-
-            const s = String(valor).trim();
-
+            // Não pode ser zero
             if (s === "0") {
                 return "não pode ser 0";
             }
 
+            // Sempre validar formato quando existir valor
             if (!/^\d{7}$/.test(s)) {
-                return "deve conter exatamente 7 dígitos quando NFCeCST for 110";
+                return "deve conter exatamente 7 dígitos";
             }
 
             return true;

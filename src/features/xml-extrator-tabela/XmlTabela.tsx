@@ -50,14 +50,12 @@ export default function XmlTabela() {
         const separador = "-";
         const maxTotal = 40;
 
-        // código + "-" já ocupam isso
         const reservado = cod.length + separador.length;
-
         const maxDesc = maxTotal - reservado;
 
         const descFinal = desc.slice(0, Math.max(0, maxDesc));
 
-        return `${cod}${separador}${descFinal}`.slice(0, 40);
+        return `${cod}-${descFinal}`.slice(0, 40);
     }
 
 
@@ -391,7 +389,8 @@ export default function XmlTabela() {
             // ✅ 1) Gera "Nome Produto" final ANTES de normalizar/validar
             if (headers.includes("Nome Produto")) {
                 const desc = descKey ? linha[descKey] : "";
-                const cod = codKey ? linha[codKey] : "";
+                const cod = codKey ? normalizarValor(linha[codKey], "Código Interno") : "";
+
                 nova["Nome Produto"] = montarNomeProduto(desc, cod);
             }
 
