@@ -5,6 +5,7 @@ import JsonConverter from "./features/xml-to-json/jsonConverter";
 import ReenvioPedidos from "./features/reenvio/ReenvioPedidos";
 import ExtratorXML from "./features/extrator-xml/ExtratorXML";
 import { XmlTabela } from "./features/xml-extrator-tabela";
+import XmlSearch from "./features/xmlSearch/xmlSearch";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/reenviar-pedidos" element={<ReenvioPedidos />} />
           <Route path="/extrator-xml" element={<ExtratorXML />} />
           <Route path="/xml-tabela" element={<XmlTabela />} />
+          <Route path="/xml-search" element={<XmlSearch />} />
         </Routes>
       </main>
 

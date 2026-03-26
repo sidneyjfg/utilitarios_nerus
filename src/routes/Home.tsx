@@ -34,6 +34,13 @@ const utilities = [
     icon: <FiTable size={24} />,
   },
   {
+    title: "Buscar XML NFe",
+    description: "Importe CSV ou cole chaves de NF-e, filtre automaticamente e busque os XMLs direto na API.",
+    path: "/xml-search",
+    badge: "Ativo",
+    icon: <FiCpu size={24} />,
+  },
+  {
     title: "Outra funcionalidade",
     description: "Mais utilidades serão adicionadas futuramente.",
     path: "#",
