@@ -178,6 +178,21 @@ export default function Sales() {
                 setForm((f: any) => ({ ...f, password: e.target.value }))
               }
             />
+            <input
+              className="w-full mt-2 p-2 border rounded"
+              placeholder="client_id"
+              onChange={(e) =>
+                setForm((f: any) => ({ ...f, client_id: e.target.value }))
+              }
+            />
+            <input
+              className="w-full mt-2 p-2 border rounded"
+              placeholder="client_secret"
+              onChange={(e) =>
+                setForm((f: any) => ({ ...f, client_secret: e.target.value }))
+              }
+            />
+
           </>
         )}
 

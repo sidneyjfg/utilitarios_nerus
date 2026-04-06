@@ -45,6 +45,8 @@ export type Preset =
   }
   | {
     tipo: "pluggto";
+    client_id: string;
+    client_secret: string;
     username: string;
     password: string;
   }
