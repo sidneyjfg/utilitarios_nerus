@@ -6,6 +6,7 @@ import ReenvioPedidos from "./features/reenvio/ReenvioPedidos";
 import ExtratorXML from "./features/extrator-xml/ExtratorXML";
 import { XmlTabela } from "./features/xml-extrator-tabela";
 import XmlSearch from "./features/xmlSearch/xmlSearch";
+import Sales from "./features/sales/Sale";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/extrator-xml" element={<ExtratorXML />} />
           <Route path="/xml-tabela" element={<XmlTabela />} />
           <Route path="/xml-search" element={<XmlSearch />} />
+          <Route path="/sales" element={<Sales />} />
         </Routes>
       </main>
 

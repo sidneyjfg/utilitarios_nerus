@@ -1,0 +1,718 @@
+{
+    "links": [
+        {
+            "rel": "next",
+            "href": "http://api.anymarket.com.br/v2/orders/?createdAfter=2026-04-02T03:00:00-03:00&createdBefore=2026-04-02T23:59:59-03:00&offset=5"
+        }
+    ],
+    "content": [
+        {
+            "id": 318721766,
+            "accountName": "CHLI20240122132836",
+            "marketPlaceId": "S-46787692597",
+            "marketPlaceNumber": "46787692597",
+            "marketPlace": "MERCADO_LIVRE",
+            "createdAt": "2026-04-02T22:32:19Z",
+            "paymentDate": "2026-04-02T22:32:24Z",
+            "transmissionStatus": "OK",
+            "status": "INVOICED",
+            "marketPlaceUrl": "https://www.mercadolivre.com.br/vendas/2000012334782773/detalhe",
+            "marketPlaceShipmentStatus": "ready_to_ship",
+            "marketPlaceShipmentSubstatus": "in_packing_list",
+            "invoice": {
+                "accessKey": "35260420702154007579550070002311291681909251",
+                "series": "7",
+                "number": "231129",
+                "date": "2026-04-04T21:38:19Z",
+                "invoiceLink": "https://s3.us-east-1.amazonaws.com/xml.anymarket.com.br/259061406.3187217662026-04-04T18:38:22.290.xml",
+                "cfop": "5106"
+            },
+            "marketPlaceStatus": "paid",
+            "discount": 0,
+            "freight": 0,
+            "sellerFreight": 0,
+            "interestValue": 0,
+            "gross": 84.99,
+            "total": 84.99,
+            "shipping": {
+                "city": "Pirassununga",
+                "state": "SP",
+                "stateNameNormalized": "São Paulo",
+                "country": "Brasil",
+                "countryAcronymNormalized": "BR",
+                "countryNameNormalized": "BRASIL",
+                "address": "Alameda dos Jacarandás 1623",
+                "number": "1623",
+                "neighborhood": "Cidade Jardim",
+                "street": "Alameda dos Jacarandás",
+                "comment": "cidade jardim - Referencia: alameda dos jacarandas, 1623,cidade jardim- Pirassununga",
+                "zipCode": "13632564",
+                "receiverName": "maria stela araujo albuquerque bergo",
+                "promisedShippingTime": "2026-04-05T03:00:00Z"
+            },
+            "billingAddress": {
+                "city": "Pirassununga",
+                "state": "SP",
+                "stateNameNormalized": "São Paulo",
+                "country": "Brasil",
+                "countryAcronymNormalized": "BR",
+                "countryNameNormalized": "BRASIL",
+                "address": "Alameda dos Jacarandás, 1623 - Cidade Jardim",
+                "number": "1623",
+                "neighborhood": "Cidade Jardim",
+                "street": "Alameda dos Jacarandás",
+                "zipCode": "13632564",
+                "shipmentUserName": "maria  bergo",
+                "shipmentUserDocument": "20063733153",
+                "shipmentUserDocumentType": "CPF"
+            },
+            "anymarketAddress": {
+                "country": "Brasil",
+                "state": "São Paulo",
+                "stateAcronymNormalized": "SP",
+                "city": "Pirassununga",
+                "zipCode": "13632564",
+                "neighborhood": "Cidade Jardim",
+                "address": "Alameda dos Jacarandás 1623",
+                "street": "Alameda dos Jacarandás",
+                "number": "1623",
+                "comment": "cidade jardim - Referencia: alameda dos jacarandas, 1623,cidade jardim- Pirassununga",
+                "receiverName": "maria stela araujo albuquerque bergo",
+                "promisedShippingTime": "2026-04-05T03:00:00Z"
+            },
+            "buyer": {
+                "marketPlaceId": "2724276958",
+                "name": "maria stela bergo",
+                "email": "maria46787692597@mercadolivre.com",
+                "document": "20063733153",
+                "documentType": "CPF",
+                "documentNumberNormalized": "20063733153"
+            },
+            "tracking": {
+                "number": "0b32db19-dc4c-56b9-a075-b36bfec2f60d",
+                "carrier": "MEL Distribution",
+                "estimateDate": "2026-04-05T03:00:00Z"
+            },
+            "payments": [
+                {
+                    "method": "account_money",
+                    "status": "approved",
+                    "value": 84.99,
+                    "installments": 1,
+                    "marketplaceId": "153051049572",
+                    "paymentMethodNormalized": "MercadoPago",
+                    "paymentDetailNormalized": "MercadoPago",
+                    "gatewayFee": 0,
+                    "marketplaceFee": 11.9
+                }
+            ],
+            "items": [
+                {
+                    "product": {
+                        "id": 289279738,
+                        "title": "CHOCOLATE AO LEITE LINDT CAIXA LINDOR 112G"
+                    },
+                    "sku": {
+                        "id": 92173226,
+                        "title": "CHOCOLATE AO LEITE LINDT CAIXA LINDOR 112G",
+                        "partnerId": "430240",
+                        "ean": "7890130202817"
+                    },
+                    "amount": 1,
+                    "unit": 84.99,
+                    "gross": 84.99,
+                    "total": 84.99,
+                    "discount": 0,
+                    "shippings": [
+                        {
+                            "id": 613834088,
+                            "shippingtype": "me2 - Fulfillment",
+                            "shippingCarrierNormalized": "UNKNOWN",
+                            "shippingCarrierTypeNormalized": "UNKNOWN"
+                        }
+                    ],
+                    "idInMarketPlace": "MLB4644676802",
+                    "marketPlaceId": "2000015813461296",
+                    "orderItemId": 386548160,
+                    "officialStoreId": "71042",
+                    "officialStoreName": "Lindt",
+                    "listingType": "gold_special",
+                    "freeShipping": false,
+                    "isCatalog": true,
+                    "idInMarketplaceCatalogOrigin": "MLB4477492590",
+                    "gatewayFee": 0,
+                    "marketplaceFee": 11.9,
+                    "itemIdInMarketPlace": "153051049572"
+                }
+            ],
+            "deliveryStatus": "UNKNOWN",
+            "idAccount": 46850,
+            "fulfillment": true,
+            "shippingOptionId": "3291534659",
+            "shippingId": "46787692597",
+            "metadata": {
+                "packId": "2000012334782773",
+                "needInvoiceXML": "false",
+                "nfe_xml_sale": "https://s3.us-east-1.amazonaws.com/xml.anymarket.com.br/anymarket-mercadolivre-nfe/transactionType-sale/259061406.5811339178.xml",
+                "printTag": "false",
+                "logistic_type": "fulfillment"
+            },
+            "orderTypeName": "FULL",
+            "documentIntermediator": "03007331000141",
+            "intermediateRegistrationId": "1648255735",
+            "documentPaymentInstitution": "1",
+            "logisticType": "MARKETPLACE",
+            "lastUpdate": "2026-04-04T21:38:21Z"
+        },
+        {
+            "id": 318354139,
+            "accountName": "Shopee - 1633726335",
+            "marketPlaceId": "260403SCNDFN0V",
+            "marketPlaceNumber": "260403SCNDFN0V",
+            "marketPlace": "SHOPEE",
+            "createdAt": "2026-04-02T23:43:17Z",
+            "cancelDate": "2026-04-03T23:43:35Z",
+            "transmissionStatus": "OK",
+            "status": "CANCELED",
+            "marketPlaceStatus": "CANCELLED",
+            "discount": 0,
+            "freight": 0,
+            "sellerFreight": 0,
+            "interestValue": 0,
+            "gross": 99.99,
+            "total": 99.99,
+            "shipping": {
+                "city": "****",
+                "state": "****",
+                "stateNameNormalized": "UNKNOWN",
+                "country": "****",
+                "countryNameNormalized": "UNKNOWN",
+                "address": "- ****",
+                "neighborhood": "****",
+                "zipCode": "****",
+                "receiverName": "L******a",
+                "promisedShippingTime": "2026-04-04T03:00:00Z"
+            },
+            "billingAddress": {
+                "city": "****",
+                "state": "****",
+                "stateNameNormalized": "UNKNOWN",
+                "country": "****",
+                "countryNameNormalized": "UNKNOWN",
+                "address": "- ****",
+                "neighborhood": "****",
+                "zipCode": "****",
+                "shipmentUserName": "La",
+                "shipmentUserDocument": "******",
+                "shipmentUserDocumentType": "OTHER"
+            },
+            "anymarketAddress": {
+                "country": "****",
+                "state": "****",
+                "city": "****",
+                "zipCode": "****",
+                "neighborhood": "****",
+                "address": "- ****",
+                "receiverName": "L******a",
+                "promisedShippingTime": "2026-04-04T03:00:00Z"
+            },
+            "buyer": {
+                "name": "La",
+                "email": "buyer.260403SCNDFN0V@shopee.com",
+                "document": "******",
+                "documentType": "OTHER"
+            },
+            "payments": [
+                {
+                    "method": "Pix",
+                    "value": 99.99,
+                    "installments": 1,
+                    "marketplaceId": "1",
+                    "paymentMethodNormalized": "PIX",
+                    "paymentDetailNormalized": "PIX"
+                }
+            ],
+            "items": [
+                {
+                    "product": {
+                        "id": 334809684,
+                        "title": "OVO LINDT SWISS CLASSIC"
+                    },
+                    "sku": {
+                        "id": 103432077,
+                        "title": "OVO LINDT SWISS CLASSIC",
+                        "partnerId": "430368",
+                        "ean": "7908492700220"
+                    },
+                    "amount": 1,
+                    "unit": 119.99,
+                    "gross": 119.99,
+                    "total": 99.99,
+                    "discount": 20,
+                    "shippings": [
+                        {
+                            "id": 613468766,
+                            "shippingtype": "Full",
+                            "shippingCarrierNormalized": "UNKNOWN",
+                            "shippingCarrierTypeNormalized": "UNKNOWN"
+                        }
+                    ],
+                    "idInMarketPlace": "46206296328",
+                    "marketPlaceId": "46206296328",
+                    "orderItemId": 386117182,
+                    "freeShipping": false,
+                    "isCatalog": false,
+                    "idInMarketplaceCatalogOrigin": " "
+                }
+            ],
+            "deliveryStatus": "UNKNOWN",
+            "idAccount": 2390,
+            "fulfillment": true,
+            "metadata": {
+                "needInvoiceXML": "false",
+                "import_all_order_status": "true",
+                "blocked_update_invoiced": "false",
+                "force_imported_status": "CANCELED"
+            },
+            "lastUpdate": "2026-04-03T23:43:35Z"
+        },
+        {
+            "id": 318215623,
+            "accountName": "Shopee - 1633726335",
+            "marketPlaceId": "260402RJJ11YAJ",
+            "marketPlaceNumber": "260402RJJ11YAJ",
+            "marketPlace": "SHOPEE",
+            "createdAt": "2026-04-02T15:56:06Z",
+            "cancelDate": "2026-04-03T15:22:02Z",
+            "transmissionStatus": "OK",
+            "status": "CANCELED",
+            "marketPlaceStatus": "CANCELLED",
+            "discount": 0,
+            "freight": 0,
+            "sellerFreight": 0,
+            "interestValue": 0,
+            "gross": 37.99,
+            "total": 37.99,
+            "shipping": {
+                "city": "****",
+                "state": "****",
+                "stateNameNormalized": "UNKNOWN",
+                "country": "****",
+                "countryNameNormalized": "UNKNOWN",
+                "address": "- ****",
+                "neighborhood": "****",
+                "zipCode": "****",
+                "receiverName": "M******s",
+                "promisedShippingTime": "2026-04-09T03:00:00Z"
+            },
+            "billingAddress": {
+                "city": "****",
+                "state": "****",
+                "stateNameNormalized": "UNKNOWN",
+                "country": "****",
+                "countryNameNormalized": "UNKNOWN",
+                "address": "- ****",
+                "neighborhood": "****",
+                "zipCode": "****",
+                "shipmentUserName": "Ms",
+                "shipmentUserDocument": "******",
+                "shipmentUserDocumentType": "OTHER"
+            },
+            "anymarketAddress": {
+                "country": "****",
+                "state": "****",
+                "city": "****",
+                "zipCode": "****",
+                "neighborhood": "****",
+                "address": "- ****",
+                "receiverName": "M******s",
+                "promisedShippingTime": "2026-04-09T03:00:00Z"
+            },
+            "buyer": {
+                "name": "Ms",
+                "email": "buyer.260402RJJ11YAJ@shopee.com",
+                "document": "******",
+                "documentType": "OTHER"
+            },
+            "payments": [
+                {
+                    "method": "Pix",
+                    "value": 37.99,
+                    "installments": 1,
+                    "marketplaceId": "1",
+                    "paymentMethodNormalized": "PIX",
+                    "paymentDetailNormalized": "PIX"
+                }
+            ],
+            "items": [
+                {
+                    "product": {
+                        "id": 346146906,
+                        "title": "Barra de Chocolate Lindt Swiss Classic Duplo Leite 100g"
+                    },
+                    "sku": {
+                        "id": 107041586,
+                        "title": "Barra de Chocolate Lindt Swiss Classic Duplo Leite 100g",
+                        "partnerId": "400030",
+                        "ean": "7610400090148"
+                    },
+                    "amount": 1,
+                    "unit": 37.99,
+                    "gross": 37.99,
+                    "total": 37.99,
+                    "discount": 0,
+                    "shippings": [
+                        {
+                            "id": 613343025,
+                            "shippingtype": "Full",
+                            "shippingCarrierNormalized": "UNKNOWN",
+                            "shippingCarrierTypeNormalized": "UNKNOWN"
+                        }
+                    ],
+                    "idInMarketPlace": "22099028510",
+                    "marketPlaceId": "22099028510",
+                    "orderItemId": 385954447,
+                    "freeShipping": false,
+                    "isCatalog": false,
+                    "idInMarketplaceCatalogOrigin": " "
+                }
+            ],
+            "deliveryStatus": "UNKNOWN",
+            "idAccount": 2390,
+            "fulfillment": true,
+            "metadata": {
+                "needInvoiceXML": "false",
+                "import_all_order_status": "true",
+                "blocked_update_invoiced": "false",
+                "force_imported_status": "CANCELED"
+            },
+            "lastUpdate": "2026-04-03T15:22:02Z"
+        },
+        {
+            "id": 318031641,
+            "accountName": "CHLI20240122132836",
+            "marketPlaceId": "S-46777244689",
+            "marketPlaceNumber": "46777244689",
+            "marketPlace": "MERCADO_LIVRE",
+            "createdAt": "2026-04-02T22:57:31Z",
+            "paymentDate": "2026-04-02T22:57:34Z",
+            "transmissionStatus": "OK",
+            "status": "CONCLUDED",
+            "marketPlaceUrl": "https://www.mercadolivre.com.br/vendas/2000012335104053/detalhe",
+            "marketPlaceShipmentStatus": "delivered",
+            "invoice": {
+                "accessKey": "35260420702154007579550070002279571566687316",
+                "series": "7",
+                "number": "227957",
+                "date": "2026-04-03T00:06:47Z",
+                "invoiceLink": "https://s3.us-east-1.amazonaws.com/xml.anymarket.com.br/259061406.3180316412026-04-02T21:07:23.111.xml",
+                "cfop": "5106"
+            },
+            "marketPlaceStatus": "paid",
+            "discount": 0,
+            "freight": 0,
+            "sellerFreight": 0,
+            "interestValue": 0,
+            "gross": 119,
+            "total": 119,
+            "shipping": {
+                "city": "Porto Feliz",
+                "state": "SP",
+                "stateNameNormalized": "São Paulo",
+                "country": "Brasil",
+                "countryAcronymNormalized": "BR",
+                "countryNameNormalized": "BRASIL",
+                "address": "Estrada Municipal PFZ - 133 SN",
+                "number": "SN",
+                "neighborhood": "Tupinambá",
+                "street": "Estrada Municipal PFZ - 133",
+                "comment": "Caixa Postal 92 Referencia: pesqueiro sitio bela vista",
+                "zipCode": "18548406",
+                "receiverName": "Sueli Rodrigues Espindola Costa",
+                "promisedShippingTime": "2026-04-04T03:00:00Z"
+            },
+            "billingAddress": {
+                "city": "Porto Feliz",
+                "state": "SP",
+                "stateNameNormalized": "São Paulo",
+                "country": "Brasil",
+                "countryAcronymNormalized": "BR",
+                "countryNameNormalized": "BRASIL",
+                "address": "Estrada Municipal PFZ - 133, SN - Tupinambá",
+                "number": "SN",
+                "neighborhood": "Tupinambá",
+                "street": "Estrada Municipal PFZ - 133",
+                "zipCode": "18548406",
+                "shipmentUserName": "Sueli Rodrigues Espindola Costa",
+                "shipmentUserDocument": "13433062803",
+                "shipmentUserDocumentType": "CPF"
+            },
+            "anymarketAddress": {
+                "country": "Brasil",
+                "state": "São Paulo",
+                "stateAcronymNormalized": "SP",
+                "city": "Porto Feliz",
+                "zipCode": "18548406",
+                "neighborhood": "Tupinambá",
+                "address": "Estrada Municipal PFZ - 133 SN",
+                "street": "Estrada Municipal PFZ - 133",
+                "number": "SN",
+                "comment": "Caixa Postal 92 Referencia: pesqueiro sitio bela vista",
+                "receiverName": "Sueli Rodrigues Espindola Costa",
+                "promisedShippingTime": "2026-04-04T03:00:00Z"
+            },
+            "buyer": {
+                "marketPlaceId": "51344251",
+                "name": "Sueli Rodrigues Espindola Costa",
+                "email": "sueli46777244689@mercadolivre.com",
+                "document": "13433062803",
+                "documentType": "CPF",
+                "documentNumberNormalized": "13433062803"
+            },
+            "tracking": {
+                "number": "55593310-fdb6-560b-bc75-0e13c6c5f672",
+                "carrier": "MEL Distribution",
+                "date": "2026-04-03T05:52:20Z",
+                "estimateDate": "2026-04-04T03:00:00Z",
+                "shippedDate": "2026-04-03T05:50:54Z",
+                "deliveredDate": "2026-04-03T19:48:42Z"
+            },
+            "payments": [
+                {
+                    "method": "account_money",
+                    "status": "approved",
+                    "value": 119,
+                    "installments": 1,
+                    "marketplaceId": "153055043634",
+                    "paymentMethodNormalized": "MercadoPago",
+                    "paymentDetailNormalized": "MercadoPago",
+                    "gatewayFee": 0,
+                    "marketplaceFee": 22.6
+                }
+            ],
+            "items": [
+                {
+                    "product": {
+                        "id": 334809650,
+                        "title": "LINDOR OVO AO LEITE 260G"
+                    },
+                    "sku": {
+                        "id": 103432067,
+                        "title": "LINDOR OVO AO LEITE 260G",
+                        "partnerId": "430706",
+                        "ean": "7890130400688"
+                    },
+                    "amount": 1,
+                    "unit": 119,
+                    "gross": 119,
+                    "total": 119,
+                    "discount": 0,
+                    "shippings": [
+                        {
+                            "id": 613140824,
+                            "shippingtype": "me2 - Fulfillment",
+                            "shippingCarrierNormalized": "UNKNOWN",
+                            "shippingCarrierTypeNormalized": "UNKNOWN"
+                        }
+                    ],
+                    "idInMarketPlace": "MLB5298150508",
+                    "marketPlaceId": "2000015813762992",
+                    "orderItemId": 385735123,
+                    "officialStoreId": "71042",
+                    "officialStoreName": "Lindt",
+                    "listingType": "gold_pro",
+                    "freeShipping": false,
+                    "isCatalog": true,
+                    "idInMarketplaceCatalogOrigin": "MLB5298162760",
+                    "gatewayFee": 0,
+                    "marketplaceFee": 22.6,
+                    "itemIdInMarketPlace": "153055043634"
+                }
+            ],
+            "deliveryStatus": "UNKNOWN",
+            "idAccount": 46850,
+            "fulfillment": true,
+            "shippingOptionId": "2346160638",
+            "shippingId": "46777244689",
+            "metadata": {
+                "packId": "2000012335104053",
+                "needInvoiceXML": "false",
+                "nfe_xml_sale": "https://s3.us-east-1.amazonaws.com/xml.anymarket.com.br/anymarket-mercadolivre-nfe/transactionType-sale/259061406.5801935268.xml",
+                "printTag": "false",
+                "logistic_type": "fulfillment"
+            },
+            "orderTypeName": "FULL",
+            "documentIntermediator": "03007331000141",
+            "intermediateRegistrationId": "1648255735",
+            "documentPaymentInstitution": "1",
+            "logisticType": "MARKETPLACE",
+            "lastUpdate": "2026-04-03T19:49:27Z"
+        },
+        {
+            "id": 318029788,
+            "accountName": "CHLI20240122132836",
+            "marketPlaceId": "S-46777481572",
+            "marketPlaceNumber": "46777481572",
+            "marketPlace": "MERCADO_LIVRE",
+            "createdAt": "2026-04-02T23:59:25Z",
+            "paymentDate": "2026-04-02T23:59:29Z",
+            "transmissionStatus": "OK",
+            "status": "CONCLUDED",
+            "marketPlaceUrl": "https://www.mercadolivre.com.br/vendas/2000012335874349/detalhe",
+            "marketPlaceShipmentStatus": "delivered",
+            "invoice": {
+                "accessKey": "35260420702154007579550070002279471486935007",
+                "series": "7",
+                "number": "227947",
+                "date": "2026-04-02T23:59:42Z",
+                "invoiceLink": "https://s3.us-east-1.amazonaws.com/xml.anymarket.com.br/259061406.3180297882026-04-02T20:59:56.862.xml",
+                "cfop": "5106"
+            },
+            "marketPlaceStatus": "paid",
+            "discount": 0,
+            "freight": 0,
+            "sellerFreight": 1.62,
+            "interestValue": 0,
+            "gross": 119,
+            "total": 119,
+            "shipping": {
+                "city": "Santa Branca",
+                "state": "SP",
+                "stateNameNormalized": "São Paulo",
+                "country": "Brasil",
+                "countryAcronymNormalized": "BR",
+                "countryNameNormalized": "BRASIL",
+                "address": "Rua dos Ipês 116",
+                "number": "116",
+                "neighborhood": "Jardim Costão",
+                "street": "Rua dos Ipês",
+                "comment": "Cond Vivenda do Sol Referencia: No wase localiza pelo condominio. Telefone somente WhatsApp",
+                "zipCode": "12380000",
+                "receiverName": "Magali Gimenez Fontana",
+                "promisedShippingTime": "2026-04-03T03:00:00Z"
+            },
+            "billingAddress": {
+                "city": "Santa Branca",
+                "state": "SP",
+                "stateNameNormalized": "São Paulo",
+                "country": "Brasil",
+                "countryAcronymNormalized": "BR",
+                "countryNameNormalized": "BRASIL",
+                "address": "Rua dos Ipês, 116 - Jardim Costão",
+                "number": "116",
+                "neighborhood": "Jardim Costão",
+                "street": "Rua dos Ipês",
+                "zipCode": "12380000",
+                "shipmentUserName": "Magali Gimenez Fontana",
+                "shipmentUserDocument": "12595308840",
+                "shipmentUserDocumentType": "CPF"
+            },
+            "anymarketAddress": {
+                "country": "Brasil",
+                "state": "São Paulo",
+                "stateAcronymNormalized": "SP",
+                "city": "Santa Branca",
+                "zipCode": "12380000",
+                "neighborhood": "Jardim Costão",
+                "address": "Rua dos Ipês 116",
+                "street": "Rua dos Ipês",
+                "number": "116",
+                "comment": "Cond Vivenda do Sol Referencia: No wase localiza pelo condominio. Telefone somente WhatsApp",
+                "receiverName": "Magali Gimenez Fontana",
+                "promisedShippingTime": "2026-04-03T03:00:00Z"
+            },
+            "buyer": {
+                "marketPlaceId": "220488369",
+                "name": "Magali Gimenez Fontana",
+                "email": "magali46777481572@mercadolivre.com",
+                "document": "12595308840",
+                "documentType": "CPF",
+                "documentNumberNormalized": "12595308840"
+            },
+            "tracking": {
+                "number": "25529732-40c7-55a2-9039-bd8946a11b32",
+                "carrier": "MEL Distribution - Same Day",
+                "date": "2026-04-03T14:57:48Z",
+                "estimateDate": "2026-04-03T03:00:00Z",
+                "shippedDate": "2026-04-03T14:57:48Z",
+                "deliveredDate": "2026-04-03T23:09:18Z"
+            },
+            "payments": [
+                {
+                    "method": "account_money",
+                    "status": "approved",
+                    "value": 119,
+                    "installments": 1,
+                    "marketplaceId": "153064676366",
+                    "paymentMethodNormalized": "MercadoPago",
+                    "paymentDetailNormalized": "MercadoPago",
+                    "gatewayFee": 0,
+                    "marketplaceFee": 22.6
+                }
+            ],
+            "items": [
+                {
+                    "product": {
+                        "id": 334809650,
+                        "title": "LINDOR OVO AO LEITE 260G"
+                    },
+                    "sku": {
+                        "id": 103432067,
+                        "title": "LINDOR OVO AO LEITE 260G",
+                        "partnerId": "430706",
+                        "ean": "7890130400688"
+                    },
+                    "amount": 1,
+                    "unit": 119,
+                    "gross": 119,
+                    "total": 119,
+                    "discount": 0,
+                    "shippings": [
+                        {
+                            "id": 613139104,
+                            "shippingtype": "me2 - Fulfillment",
+                            "shippingCarrierNormalized": "UNKNOWN",
+                            "shippingCarrierTypeNormalized": "UNKNOWN"
+                        }
+                    ],
+                    "idInMarketPlace": "MLB5298150508",
+                    "marketPlaceId": "2000015814509846",
+                    "orderItemId": 385732923,
+                    "officialStoreId": "71042",
+                    "officialStoreName": "Lindt",
+                    "listingType": "gold_pro",
+                    "freeShipping": false,
+                    "isCatalog": true,
+                    "idInMarketplaceCatalogOrigin": "MLB5298162760",
+                    "gatewayFee": 0,
+                    "marketplaceFee": 22.6,
+                    "itemIdInMarketPlace": "153064676366"
+                }
+            ],
+            "deliveryStatus": "UNKNOWN",
+            "idAccount": 46850,
+            "fulfillment": true,
+            "shippingOptionId": "672099814",
+            "shippingId": "46777481572",
+            "metadata": {
+                "packId": "2000012335874349",
+                "needInvoiceXML": "false",
+                "nfe_xml_sale": "https://s3.us-east-1.amazonaws.com/xml.anymarket.com.br/anymarket-mercadolivre-nfe/transactionType-sale/259061406.5801902835.xml",
+                "printTag": "false",
+                "logistic_type": "fulfillment"
+            },
+            "orderTypeName": "FULL",
+            "documentIntermediator": "03007331000141",
+            "intermediateRegistrationId": "1648255735",
+            "documentPaymentInstitution": "1",
+            "logisticType": "MARKETPLACE",
+            "lastUpdate": "2026-04-03T23:09:42Z"
+        }
+    ],
+    "page": {
+        "size": 5,
+        "totalElements": 1376,
+        "totalPages": 276,
+        "number": 1
+    }
+}

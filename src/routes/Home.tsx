@@ -41,6 +41,13 @@ const utilities = [
     icon: <FiCpu size={24} />,
   },
   {
+    title: "Vendas por painel",
+    description: "Visualize as vendas de clientes por painel e quantidade de vendas",
+    path: "/sales",
+    badge: "Ativo",
+    icon: <FiTool size={24} />,
+  },
+  {
     title: "Outra funcionalidade",
     description: "Mais utilidades serão adicionadas futuramente.",
     path: "#",
