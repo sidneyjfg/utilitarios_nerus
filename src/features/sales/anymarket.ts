@@ -119,9 +119,17 @@ export async function getSalesAnymarket(
 
         for (const p of pedidos) {
             statusSet.add(p.status);
-            if (!STATUS_VALIDOS.includes(p.status)) continue;
 
-            todosPedidos.push(p); // 🔥 guarda tudo
+            if (!STATUS_VALIDOS.includes(p.status)) {
+                console.log("Pedido ignorado:", {
+                    id: p.id,
+                    status: p.status,
+                    valor: p.total,
+                });
+                continue;
+            }
+
+            todosPedidos.push(p);
         }
         console.log(`Página offset ${offset} STATUS:`, Array.from(statusSet));
         offset += limit;
