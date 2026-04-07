@@ -199,6 +199,13 @@ export default function Sales() {
         {tipo === "tray" && (
           <>
             <input
+              className="w-full p-2 border rounded"
+              placeholder="URL da Tray (ex: https://SEU_DOMINIO)"
+              onChange={(e) =>
+                setForm((f: any) => ({ ...f, url_tray: e.target.value }))
+              }
+            />
+            <input
               className="w-full mb-2 p-2 border rounded"
               placeholder="consumer_key"
               onChange={(e) =>
@@ -268,9 +275,8 @@ export default function Sales() {
       {/* AÇÃO */}
       <button
         onClick={processar}
-        className={`w-full py-3 rounded text-white ${
-          loading ? "bg-gray-400" : "bg-red-600 hover:bg-red-700"
-        }`}
+        className={`w-full py-3 rounded text-white ${loading ? "bg-gray-400" : "bg-red-600 hover:bg-red-700"
+          }`}
       >
         {loading ? "Buscando..." : "Buscar Vendas"}
       </button>
@@ -294,7 +300,10 @@ export default function Sales() {
               <div className="bg-slate-100 p-4 rounded-xl">
                 <p className="text-sm text-slate-500">Total</p>
                 <p className="text-2xl font-bold">
-                  R$ {resultado.totalValor.toFixed(2)}
+                  {resultado.totalValor.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
                 </p>
               </div>
             </div>
@@ -304,14 +313,30 @@ export default function Sales() {
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-green-50 p-4 rounded-xl">
               <p className="text-sm">Fulfillment</p>
-              <p>{resultado.fulfillment.pedidos} pedidos</p>
-              <p>R$ {resultado.fulfillment.valor.toFixed(2)}</p>
+              <p>
+                {resultado.supportsFulfillment
+                  ? `${resultado.fulfillment.pedidos} pedidos`
+                  : "N/A"}
+              </p>
+
+              <p>
+                {resultado.supportsFulfillment
+                  ? `${resultado.fulfillment.valor.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}`
+                  : "Não disponível"}
+              </p>
             </div>
 
             <div className="bg-blue-50 p-4 rounded-xl">
               <p className="text-sm">Não Fulfillment</p>
               <p>{resultado.naoFulfillment.pedidos} pedidos</p>
-              <p>R$ {resultado.naoFulfillment.valor.toFixed(2)}</p>
+              <p>{resultado.naoFulfillment.valor.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+              </p>
             </div>
           </div>
 
@@ -332,8 +357,10 @@ export default function Sales() {
                 </p>
 
                 <p className="text-green-600">
-                  Fulfillment: {data.fulfillment.pedidos} | R${" "}
-                  {data.fulfillment.valor.toFixed(2)}
+                  Fulfillment:{" "}
+                  {resultado.supportsFulfillment
+                    ? `${data.fulfillment.pedidos} | R$ ${data.fulfillment.valor.toFixed(2)}`
+                    : "N/A"}
                 </p>
 
                 <p className="text-blue-600">

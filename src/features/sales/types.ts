@@ -29,6 +29,8 @@ export type SalesResult = {
       };
     }
   >;
+
+  supportsFulfillment?: boolean; // ✅ AQUI
 };
 
 export type DateFilter = {
@@ -52,6 +54,7 @@ export type Preset =
   }
   | {
     tipo: "tray";
+    url_tray: string;
     consumer_key: string;
     consumer_secret: string;
     code: string;
